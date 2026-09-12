@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const themeToggle = document.querySelector(".theme-controller");
 
     if (themeToggle) {
-        if (localStorage.theme === "halloween") {
-            document.documentElement.setAttribute("data-theme", "halloween");
+        if (localStorage.theme === "dark") {
+            document.documentElement.setAttribute("data-theme", "dark");
             themeToggle.checked = true;
         }
 
@@ -13,12 +13,12 @@ document.addEventListener("DOMContentLoaded", function () {
             if (this.checked) {
                 document.documentElement.setAttribute(
                     "data-theme",
-                    "halloween"
+                    "dark"
                 );
-                localStorage.theme = "halloween";
+                localStorage.theme = "dark";
             } else {
-                document.documentElement.setAttribute("data-theme", "retro");
-                localStorage.theme = "retro";
+                document.documentElement.setAttribute("data-theme", "light");
+                localStorage.theme = "light";
             }
         });
     }
