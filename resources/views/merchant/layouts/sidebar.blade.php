@@ -22,6 +22,19 @@
                             Dashboard
                         </a>
                     </li>
+                    <li class="mt-4">
+                        <h2 class="menu-title text-base-content/60 pl-4">
+                            <span>Menu Utama</span>
+                        </h2>
+                    </li>
+                    @if (Auth::user()->role === 'admin')
+                        <li>
+                            <a href="{{ route('users.index') }}" class="flex gap-4 {{ request()->routeIs('users.*') ? 'active' : '' }}">
+                                <i class="ri-group-line"></i>
+                                Olah Users
+                            </a>
+                        </li>
+                    @endif
                 </ul>
             </div>
         </div>
