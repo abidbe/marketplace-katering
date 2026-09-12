@@ -1,25 +1,23 @@
 @extends('layouts.main')
-
 @section('breadcrumb')
-    <a href="{{ route('users.index') }}" class="flex items-center gap-2">
-        Olah User
+    <a href="{{ route('menus.index') }}" class="flex items-center gap-2">
+        Kelola Menu
     </a>
 @endsection
 @php
-    $indexRoute = fn() => route('users.index');
-    $createRoute = fn() => route('users.create');
-    $editRoute = fn($model) => route('users.edit', $model->id);
-    $deleteRoute = fn($model) => route('users.destroy', $model->id);
+    $indexRoute = fn() => route('menus.index');
+    $createRoute = fn() => route('menus.create');
+    $editRoute = fn($model) => route('menus.edit', $model->id);
+    $deleteRoute = fn($model) => route('menus.destroy', $model->id);
 
+    use App\Models\Menu;
     use App\Models\User;
 @endphp
 @section('pages')
     <div class="card bg-base-100 shadow-xl">
         <div class="card-body">
-            <!-- Header -->
             <div class="flex justify-between items-center mb-4">
-                <h1 class="card-title text-lg "><b>Daftar Users</b></h1>
-
+                <h1 class="card-title text-lg"><b>Daftar Menu</b></h1>
             </div>
 
             <form method="GET" action="{{ $indexRoute() }}" class="mb-4">
@@ -28,26 +26,26 @@
                         <a href="{{ $createRoute() }}" onclick="modalFormAjax(this, event)"
                             class="btn btn-primary w-full sm:w-auto">
                             <i class="ri-add-line mr-2"></i>
-                            Tambah User
+                            Tambah Menu
                         </a>
                     </div>
                     <div class="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                         {{ $models->links('components/per-page') }}
                         <div class="form-control">
-                            <select name="role" class="select select-bordered w-full" onchange="this.form.submit()">
-                                <option value="">Semua Role</option>
-                                @foreach (User::ROLE as $key => $label)
-                                    <option value="{{ $key }}" {{ request('role') === $key ? 'selected' : '' }}>
-                                        {{ $label }}
+                            <select name="category" class="select select-bordered w-full" onchange="this.form.submit()">
+                                <option value="">Semua Kategori</option>
+                                @foreach ($categories as $cat)
+                                    <option value="{{ $cat }}" {{ request('category') === $cat ? 'selected' : '' }}>
+                                        {{ $cat }}
                                     </option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="form-control">
-                            <select name="status" class="select select-bordered w-full" onchange="this.form.submit()">
+                            <select name="is_active" class="select select-bordered w-full" onchange="this.form.submit()">
                                 <option value="">Semua Status</option>
                                 @foreach (User::IS_ACTIVE as $key => $label)
-                                    <option value="{{ $key }}" {{ request('status') === (string) $key ? 'selected' : '' }}>
+                                    <option value="{{ $key }}" {{ request('is_active') === (string) $key ? 'selected' : '' }}>
                                         {{ $label }}
                                     </option>
                                 @endforeach
@@ -58,20 +56,17 @@
                 </div>
             </form>
 
-            <!-- Table -->
             <div class="overflow-x-auto">
                 <table class="table table-zebra">
-                    <!-- head -->
                     <thead>
                         <tr>
                             <th>No</th>
                             <th>Aksi</th>
+                            <th>Foto</th>
                             <x-sort-th column="name" label="Nama" />
-                            <x-sort-th column="email" label="Email" />
-                            <x-sort-th column="company_name" label="Perusahaan" />
-                            <x-sort-th column="role" label="Role" />
+                            <x-sort-th column="category" label="Kategori" />
+                            <x-sort-th column="price" label="Harga" />
                             <x-sort-th column="is_active" label="Status" />
-                            <x-sort-th column="phone" label="No HP" />
                         </tr>
                     </thead>
                     <tbody>
@@ -88,27 +83,35 @@
                                         <i class="ri-pencil-line"></i>
                                     </a>
                                 </td>
+                                <td>
+                                    @if ($model->file('foto')->hasFile())
+                                        <div class="avatar">
+                                            <div class="w-14 rounded">
+                                                <img src="{{ $model->file('foto')->preview() }}" alt="{{ $model->name }}" />
+                                            </div>
+                                        </div>
+                                    @else
+                                        <span class="text-base-content/40">-</span>
+                                    @endif
+                                </td>
                                 <td>{{ $model->name }}</td>
-                                <td>{{ $model->email }}</td>
-                                <td>{{ $model->company_name ?? '-' }}</td>
-                                <td>{{ $model->role_val }}</td>
+                                <td>{{ $model->category ?? '-' }}</td>
+                                <td>{{ $model->price_rp }}</td>
                                 <td>
                                     <span class="badge {{ $model->is_active ? 'badge-success' : 'badge-error' }} badge-sm">
                                         {{ $model->is_active_val }}
                                     </span>
                                 </td>
-                                <td>{{ $model->phone }}</td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="8" class="text-center">Tidak ada data</td>
+                                <td colspan="7" class="text-center">Belum ada menu. Klik "Tambah Menu" untuk memulai.</td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
 
-            <!-- Pagination -->
             <div class="mt-10">
                 {{ $models->links('components/paginate') }}
             </div>

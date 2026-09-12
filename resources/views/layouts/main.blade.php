@@ -23,7 +23,7 @@
 
         <!-- Konten Utama -->
         <div class="drawer-content flex flex-col min-h-screen">
-            @include('merchant/layouts/header')
+            @include('layouts/header')
 
             <main class="flex-1 p-6 space-y-6 fade-in">
                 <!-- Breadcrumbs -->
@@ -40,10 +40,10 @@
                 @yield('pages')
             </main>
 
-            @include('merchant/layouts/footer')
+            @include('layouts/footer')
         </div>
 
-        @include('merchant/layouts/sidebar')
+        @include('layouts/sidebar')
     </div>
 
     <!-- Scripts -->

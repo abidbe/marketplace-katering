@@ -8,6 +8,7 @@ use App\Traits\Fileable;
 use App\Traits\Validatable;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Validation\Rule;
@@ -32,6 +33,24 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role',
+        'is_active',
+        'company_name',
+        'description',
+        'address',
+        'city',
+        'phone',
     ];
 
     public const ROLE = [
@@ -119,6 +138,17 @@ class User extends Authenticatable
         ];
     }
 
+    public function profileRules(): array
+    {
+        return [
+            'company_name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string', 'max:2000'],
+            'address' => ['required', 'string', 'max:500'],
+            'city' => ['required', 'string', 'max:100'],
+            'phone' => ['required', 'string', 'max:20'],
+        ];
+    }
+
     public function getIs_activeValAttribute()
     {
         return self::IS_ACTIVE[$this->is_active];
@@ -127,5 +157,10 @@ class User extends Authenticatable
     public function getRoleValAttribute()
     {
         return self::ROLE[$this->role];
+    }
+
+    public function menus(): HasMany
+    {
+        return $this->hasMany(Menu::class);
     }
 }

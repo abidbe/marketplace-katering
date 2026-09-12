@@ -25,6 +25,7 @@ class RegisteredUserController extends Controller
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
                 'password' => ['required', 'string', 'confirmed', Rules\Password::defaults()],
+                'role' => ['required', 'in:merchant,customer'],
             ]);
         } catch (ValidationException $e) {
             request()->session()->flash('error', $e->getMessage());
@@ -36,6 +37,7 @@ class RegisteredUserController extends Controller
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
+            'role' => $validated['role'],
         ]);
 
         Auth::login($user);

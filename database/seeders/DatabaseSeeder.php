@@ -24,5 +24,7 @@ class DatabaseSeeder extends Seeder
             'role' => 'admin',
             'is_active' => true,
         ]);
+
+        $this->call(MarketplaceSeeder::class);
     }
 }

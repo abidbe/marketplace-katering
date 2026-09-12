@@ -1,58 +1,86 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Setup — Marketplace Katering
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi marketplace katering (merchant ↔ customer) — Laravel 13, MySQL, Tailwind + DaisyUI.
 
-## About Laravel
+## Kebutuhan
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- PHP 8.4 + Composer
+- MySQL (punya Laragon: MariaDB di `127.0.0.1:3306`)
+- Node.js 22 + npm
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Langkah
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+1. **Clone & install dependency**
 
-## Learning Laravel
+   ```bash
+   git clone <url-repo> marketplace-katering
+   cd marketplace-katering
+   composer install
+   npm install
+   ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+2. **Konfigurasi environment**
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+   ```bash
+   copy .env.example .env        # (Linux/macOS: cp .env.example .env)
+   ```
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+   Edit `.env`, ubah bagian ini:
 
-## Agentic Development
+   ```env
+   APP_NAME="Marketplace Katering"
+   APP_URL=http://localhost:8000
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=marketplace-katering
+   DB_USERNAME=root
+   DB_PASSWORD=
+   ```
 
-```bash
-composer require laravel/boost --dev
+3. **Siapkan database** — buat database kosong bernama `marketplace-katering`
+   (mis. buka phpMyAdmin → Databases → create, atau `mysql -u root -e "CREATE DATABASE \`marketplace-katering\`"`)
 
-php artisan boost:install
-```
+4. **Generate key, migrasi + seed, link storage**
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+   ```bash
+   php artisan key:generate
+   php artisan migrate --seed
+   php artisan storage:link
+   ```
 
-## Contributing
+   Seed mengisi: 1 admin, 2 katering (profil + menu), 2 kantor, 3 order contoh.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+5. **Build aset & jalankan**
 
-## Code of Conduct
+   ```bash
+   npm run build
+   php artisan serve
+   ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+   Buka http://localhost:8000
 
-## Security Vulnerabilities
+   > Saat pengembangan frontend, jalankan `npm run dev` sebagai gantinya `npm run build`.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## Akun demo (password: `password`)
 
-## License
+| Role     | Email                |
+| -------- | -------------------- |
+| Admin    | `admin@market.test`  |
+| Merchant | `sari@catering.test` |
+| Merchant | `dewa@catering.test` |
+| Customer | `kantor@office.test` |
+| Customer | `hrd@company.test`   |
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Alur singkat
+
+- **Register** pilih role (Katering/Kantor) → otomatis masuk portal sesuai role.
+- **Merchant**: lengkapi Profil Katering (wajib: nama perusahaan + kota agar muncul di pencarian) → kelola Menu (foto, harga, kategori, aktif/nonaktif) → Daftar Order (terima/tolak/selesaikan).
+- **Customer**: Cari Katering (kata kunci/kota/jenis makanan) → Pesan Sekarang → pilih porsi per menu + tanggal kirim → sistem membuat invoice `INV-YYYYMM-XXXX` → Pesanan Saya → Cetak invoice.
+- **Admin**: Olah Users (tambah/edit/nonaktifkan — user nonaktif langsung ter-logout).
+
+## Catatan
+
+- Foto menu tersimpan di `storage/app/public` — `php artisan storage:link` wajib agar tampil.
+- Database cukup lewat migration + seeder di atas; dump SQL final tersedia di `database/marketplace-katering.sql` bila diperlukan.

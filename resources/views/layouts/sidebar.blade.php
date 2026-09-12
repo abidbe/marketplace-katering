@@ -27,6 +27,40 @@
                             <span>Menu Utama</span>
                         </h2>
                     </li>
+                    @if (Auth::user()->role === 'customer')
+                        <li>
+                            <a href="{{ route('caterings.index') }}" class="flex gap-4 {{ request()->routeIs('caterings.*') ? 'active' : '' }}">
+                                <i class="ri-search-line"></i>
+                                Cari Katering
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('orders.index') }}" class="flex gap-4 {{ request()->routeIs('orders.*') ? 'active' : '' }}">
+                                <i class="ri-file-list-3-line"></i>
+                                Pesanan Saya
+                            </a>
+                        </li>
+                    @endif
+                    @if (Auth::user()->role === 'merchant')
+                        <li>
+                            <a href="{{ route('profile.edit') }}" class="flex gap-4 {{ request()->routeIs('profile.*') ? 'active' : '' }}">
+                                <i class="ri-store-2-line"></i>
+                                Profil Katering
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('menus.index') }}" class="flex gap-4 {{ request()->routeIs('menus.*') ? 'active' : '' }}">
+                                <i class="ri-restaurant-line"></i>
+                                Kelola Menu
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ route('merchant.orders.index') }}" class="flex gap-4 {{ request()->routeIs('merchant.orders.*') ? 'active' : '' }}">
+                                <i class="ri-file-list-3-line"></i>
+                                Daftar Order
+                            </a>
+                        </li>
+                    @endif
                     @if (Auth::user()->role === 'admin')
                         <li>
                             <a href="{{ route('users.index') }}" class="flex gap-4 {{ request()->routeIs('users.*') ? 'active' : '' }}">

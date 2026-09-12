@@ -13,6 +13,31 @@
                 @csrf
 
                 <div class="form-control w-full">
+                    <label class="label"><span class="label-text">Daftar sebagai</span></label>
+                    <div class="flex gap-2">
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="role" value="customer" class="peer sr-only"
+                                {{ old('role', 'customer') === 'customer' ? 'checked' : '' }} />
+                            <div class="rounded-lg border border-base-300 p-3 text-center peer-checked:border-primary peer-checked:bg-primary/10">
+                                <i class="ri-building-line text-2xl"></i>
+                                <p class="text-sm mt-1">Kantor</p>
+                            </div>
+                        </label>
+                        <label class="flex-1 cursor-pointer">
+                            <input type="radio" name="role" value="merchant" class="peer sr-only"
+                                {{ old('role') === 'merchant' ? 'checked' : '' }} />
+                            <div class="rounded-lg border border-base-300 p-3 text-center peer-checked:border-primary peer-checked:bg-primary/10">
+                                <i class="ri-restaurant-line text-2xl"></i>
+                                <p class="text-sm mt-1">Katering</p>
+                            </div>
+                        </label>
+                    </div>
+                    @error('role')
+                        <label class="label"><span class="label-text-alt text-error">{{ $message }}</span></label>
+                    @enderror
+                </div>
+
+                <div class="form-control w-full">
                     <label for="name" class="label"><span class="label-text">Nama</span></label>
                     <input
                         id="name"
